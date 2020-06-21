@@ -1,4 +1,4 @@
-#include <GL/glew.h>
+#include "Renderer.h"
 #include <GLFW/glfw3.h>
 #include "iostream"
 
@@ -27,8 +27,8 @@ int main(void) {
     std::cout << "Status: Using GLEW: " << glewGetString(GLEW_VERSION) << std::endl;
 
     unsigned int VertexArrayID;
-    glGenVertexArrays(1, &VertexArrayID);
-    glBindVertexArray(VertexArrayID);
+    GLCall(glGenVertexArrays(1, &VertexArrayID));
+    GLCall(glBindVertexArray(VertexArrayID));
 
     static const float g_vertex_buffer_data[] = {
             -1.0f, -1.0f, 0.0f,
@@ -37,21 +37,21 @@ int main(void) {
     };
 
     unsigned int vertexBuffer;
-    glGenBuffers(1, &vertexBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+    GLCall(glGenBuffers(1, &vertexBuffer));
+    GLCall(glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer));
+    GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW));
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
         /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+        GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
-        glEnableVertexAttribArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+        GLCall(glEnableVertexAttribArray(0);
+        GLCall(glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer));
+        GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr));
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDisableVertexAttribArray(0);
+        GLCall(glDrawArrays(GL_TRIANGLES, 0, 3)));
+        GLCall(glDisableVertexAttribArray(0));
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
