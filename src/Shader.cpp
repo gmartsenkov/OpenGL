@@ -5,8 +5,8 @@
 #include <fstream>
 #include <sstream>
 
-Shader::Shader(const std::string &vertexPath, const std::string& fragmentPath)
-    : m_RendererID(0) {
+Shader::Shader(const std::string &vertexPath, const std::string &fragmentPath)
+        : m_RendererID(0) {
     std::string VertexShader = GetShader(vertexPath);
     std::string FragmentShader = GetShader(fragmentPath);
 
@@ -25,15 +25,19 @@ void Shader::Unbind() const {
     GLCall(glUseProgram(0));
 }
 
-void Shader::SetUniform1i(const std::string &name, int value)
-{
+void Shader::SetUniform1i(const std::string &name, int value) {
     GLCall(glUniform1i(GetUniformLocation(name), value));
 }
+
 void Shader::SetUniform4f(const std::string &name, float v0, float v1, float v2, float v3) {
     GLCall(glUniform4f(GetUniformLocation(name), v0, v1, v2, v3))
 }
 
-int Shader::GetUniformLocation(const std::string& name) {
+void Shader::SetUniformMat4f(const std::string &name, const glm::mat4 &matrix) {
+    GLCall(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &matrix[0][0]));
+}
+
+int Shader::GetUniformLocation(const std::string &name) {
     if (m_UniformLocationCache.find(name) != m_UniformLocationCache.end())
         return m_UniformLocationCache[name];
 
