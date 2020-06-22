@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include "VertexBuffer.h"
 
 static std::string GetShader(const std::string &file) {
     std::ifstream stream(file);
@@ -99,10 +100,7 @@ int main(void) {
             2, 3, 0
     };
 
-    unsigned int vertexBuffer;
-    GLCall(glGenBuffers(1, &vertexBuffer));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer));
-    GLCall(glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), g_vertex_buffer_data, GL_STATIC_DRAW));
+    VertexBuffer vb(g_vertex_buffer_data, 4 * 2 * sizeof(float));
     GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, nullptr));
     GLCall(glEnableVertexAttribArray(0));
 
