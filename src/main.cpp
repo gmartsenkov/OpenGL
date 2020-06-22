@@ -102,8 +102,9 @@ int main(void) {
     unsigned int vertexBuffer;
     GLCall(glGenBuffers(1, &vertexBuffer));
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer));
-    GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW));
-    GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr));
+    GLCall(glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), g_vertex_buffer_data, GL_STATIC_DRAW));
+    GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, nullptr));
+    GLCall(glEnableVertexAttribArray(0));
 
     unsigned int indicesBuffer;
     GLCall(glGenBuffers(1, &indicesBuffer));
@@ -132,13 +133,8 @@ int main(void) {
         GLCall(glUseProgram(shader));
         GLCall(glUniform4f(location, 0.8f, 0.3f, 0.8f, 1.0f));
         GLCall(glBindVertexArray(VertexArrayID));
-        GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer));
-
-        GLCall(glEnableVertexAttribArray(0));
-        GLCall(glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer));
 
         GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
-        GLCall(glDisableVertexAttribArray(0));
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
