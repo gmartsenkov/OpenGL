@@ -39,10 +39,6 @@ int main() {
     }
     std::cout << "Status: Using GLEW: " << glewGetString(GLEW_VERSION) << std::endl;
 
-    unsigned int VertexArrayID;
-    GLCall(glGenVertexArrays(1, &VertexArrayID));
-    GLCall(glBindVertexArray(VertexArrayID));
-
     static const float g_vertex_buffer_data[] = {
             -0.5f, -0.5f,
             0.5f, -0.5f,
