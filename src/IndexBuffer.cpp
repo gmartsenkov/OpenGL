@@ -13,10 +13,10 @@ IndexBuffer::~IndexBuffer() {
     GLCall(glDeleteBuffers(1, &m_RenderId));
 }
 
-void IndexBuffer::Bind() {
+void IndexBuffer::Bind() const {
     GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RenderId));
 }
 
-void IndexBuffer::Unbind() {
+void IndexBuffer::Unbind() const {
     GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 }

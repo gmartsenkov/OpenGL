@@ -5,9 +5,11 @@
 #include <fstream>
 #include <sstream>
 #include "VertexBuffer.h"
+#include "VertexBufferLayout.h"
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "Shader.h"
+#include "Texture.h"
 
 
 int main() {
@@ -40,10 +42,10 @@ int main() {
     std::cout << "Status: Using GLEW: " << glewGetString(GLEW_VERSION) << std::endl;
 
     static const float g_vertex_buffer_data[] = {
-            -0.5f, -0.5f,
-            0.5f, -0.5f,
-            0.5f, 0.5f,
-            -0.5f, 0.5f
+            -0.5f, -0.5f, 0.0f, 0.0f,
+            0.5f, -0.5f, 1.0f, 0.0f,
+            0.5f, 0.5f, 1.0f, 1.0f,
+            -0.5f, 0.5f, 0.0f, 1.0f
     };
 
     static const unsigned int indices_buffer_data[] = {
@@ -51,20 +53,32 @@ int main() {
             2, 3, 0
     };
 
-    VertexArray* va = new VertexArray();
-    VertexBuffer* vb = new VertexBuffer(g_vertex_buffer_data, 4 * 2 * sizeof(float));
+    GLCall(glEnable(GL_BLEND));
+    GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+
+    VertexArray *va = new VertexArray();
+    VertexBuffer *vb = new VertexBuffer(g_vertex_buffer_data, 4 * 4 * sizeof(float));
     VertexBufferLayout layout;
+    layout.Push<float>(2);
     layout.Push<float>(2);
     va->AddBuffer(*vb, layout);
 
-    IndexBuffer* ib = new IndexBuffer(indices_buffer_data, 6);
+    IndexBuffer *ib = new IndexBuffer(indices_buffer_data, 6);
 
-    Shader* shader = new Shader("../res/shaders/BasicVertex.shader", "../res/shaders/BasicFragment.shader");
+    Shader *shader = new Shader("../res/shaders/BasicVertex.shader", "../res/shaders/BasicFragment.shader");
+    shader->Bind();
+    shader->SetUniform4f("u_Color", 1.0f, 0.3f, 0.8f, 1.0f);
+
+    Texture texture("../res/textures/dog.png");
+    texture.Bind();
+    shader->SetUniform1i("u_Texture", 0);
 
     va->UnBind();
     vb->Unbind();
     ib->Unbind();
     shader->Unbind();
+
+    Renderer renderer;
 
     float r = 0.0f;
     float increment = 0.05f;
@@ -72,20 +86,19 @@ int main() {
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
         /* Render here */
-        GLCall(glClear(GL_COLOR_BUFFER_BIT));
+        renderer.Clear();
 
         shader->Bind();
-        va->Bind();
+        shader->SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
 
         if (r > 1.0f)
             increment = -0.01f;
         else if (r < 0.0f)
             increment = 0.05;
 
-        r+= increment;
+        r += increment;
 
-        shader->SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
-        GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+        renderer.Draw(*va, *ib, *shader);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

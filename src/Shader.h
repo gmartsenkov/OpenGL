@@ -15,6 +15,7 @@ public:
     void Unbind() const;
 
     // Set uniforms
+    void SetUniform1i(const std::string& name, int value);
     void SetUniform4f(const std::string& name, float v0, float v1, float f2, float f3);
 private:
     std::string GetShader(const std::string& filepath);

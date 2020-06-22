@@ -9,6 +9,6 @@ include_directories(dependencies/glew-2.1.0/include)
 link_directories(dependencies/GLFW/lib-vc2019)
 link_directories(dependencies/glew-2.1.0/lib/Release/Win32/)
 
-file(GLOB OpenGLSRC "src/*.cpp" "src/*.h")
+file(GLOB OpenGLSRC "src/*.cpp" "src/*.h" "src/vendor/*")
 add_executable(OpenGL ${OpenGLSRC})
 target_link_libraries(OpenGL glew32s.lib glfw3.dll opengl32.lib)
