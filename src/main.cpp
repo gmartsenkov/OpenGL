@@ -69,8 +69,8 @@ int main() {
     shader->Bind();
     shader->SetUniform4f("u_Color", 1.0f, 0.3f, 0.8f, 1.0f);
 
-    Texture texture("../res/textures/dog.png");
-    texture.Bind();
+    Texture* texture = new Texture("../res/textures/dog.png");
+    texture->Bind();
     shader->SetUniform1i("u_Texture", 0);
 
     va->UnBind();
@@ -111,6 +111,7 @@ int main() {
     delete ib;
     delete va;
     delete shader;
+    delete texture;
 
     glfwTerminate();
     return 0;
