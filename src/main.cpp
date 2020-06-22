@@ -102,11 +102,11 @@ int main() {
             2, 3, 0
     };
 
-    VertexBuffer vb(g_vertex_buffer_data, 4 * 2 * sizeof(float));
+    VertexBuffer* vb = new VertexBuffer(g_vertex_buffer_data, 4 * 2 * sizeof(float));
     GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, nullptr));
     GLCall(glEnableVertexAttribArray(0));
 
-    IndexBuffer ib(indices_buffer_data, 6);
+    IndexBuffer* ib = new IndexBuffer(indices_buffer_data, 6);
 
     std::string VertexShader = GetShader("../res/shaders/BasicVertex.shader");
     std::string FragmentShader = GetShader("../res/shaders/BasicFragment.shader");
@@ -151,6 +151,9 @@ int main() {
 
         glDeleteProgram(shader);
     }
+
+    delete vb;
+    delete ib;
 
     glfwTerminate();
     return 0;
