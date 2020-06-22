@@ -6,6 +6,7 @@
 #include <sstream>
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "VertexArray.h"
 
 static std::string GetShader(const std::string &file) {
     std::ifstream stream(file);
@@ -102,9 +103,11 @@ int main() {
             2, 3, 0
     };
 
+    VertexArray* va = new VertexArray();
     VertexBuffer* vb = new VertexBuffer(g_vertex_buffer_data, 4 * 2 * sizeof(float));
-    GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, nullptr));
-    GLCall(glEnableVertexAttribArray(0));
+    VertexBufferLayout layout;
+    layout.Push<float>(2);
+    va->AddBuffer(*vb, layout);
 
     IndexBuffer* ib = new IndexBuffer(indices_buffer_data, 6);
 
@@ -131,7 +134,7 @@ int main() {
         GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
         GLCall(glUseProgram(shader));
-        GLCall(glBindVertexArray(VertexArrayID));
+        va->Bind();
 
         if (r > 1.0f)
             increment = -0.01f;
@@ -154,6 +157,7 @@ int main() {
 
     delete vb;
     delete ib;
+    delete va;
 
     glfwTerminate();
     return 0;
