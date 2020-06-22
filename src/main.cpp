@@ -5,6 +5,7 @@
 #include <fstream>
 #include <sstream>
 #include "VertexBuffer.h"
+#include "IndexBuffer.h"
 
 static std::string GetShader(const std::string &file) {
     std::ifstream stream(file);
@@ -95,7 +96,7 @@ int main(void) {
             -0.5f, 0.5f
     };
 
-    static const int indices_buffer_data[] = {
+    static const unsigned int indices_buffer_data[] = {
             0, 1, 2,
             2, 3, 0
     };
@@ -104,10 +105,7 @@ int main(void) {
     GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, nullptr));
     GLCall(glEnableVertexAttribArray(0));
 
-    unsigned int indicesBuffer;
-    GLCall(glGenBuffers(1, &indicesBuffer));
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesBuffer));
-    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(GLuint), indices_buffer_data, GL_STATIC_DRAW));
+    IndexBuffer ib(indices_buffer_data, 6);
 
     std::string VertexShader = GetShader("../res/shaders/BasicVertex.shader");
     std::string FragmentShader = GetShader("../res/shaders/BasicFragment.shader");
