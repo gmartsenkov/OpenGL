@@ -26,7 +26,7 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(960, 540, "Hello World", NULL, NULL);
     if (!window) {
         glfwTerminate();
         return -1;
@@ -44,10 +44,10 @@ int main() {
     std::cout << "Status: Using GLEW: " << glewGetString(GLEW_VERSION) << std::endl;
 
     static const float g_vertex_buffer_data[] = {
-            -0.5f, -0.5f, 0.0f, 0.0f,
-            0.5f, -0.5f, 1.0f, 0.0f,
-            0.5f, 0.5f, 1.0f, 1.0f,
-            -0.5f, 0.5f, 0.0f, 1.0f
+            100.0f, 100.0f, 0.0f, 0.0f,
+            200.0f, 100.0f, 1.0f, 0.0f,
+            200.0f, 200.0f, 1.0f, 1.0f,
+            100.0f, 200.0f, 0.0f, 1.0f
     };
 
     static const unsigned int indices_buffer_data[] = {
@@ -67,12 +67,16 @@ int main() {
 
     IndexBuffer *ib = new IndexBuffer(indices_buffer_data, 6);
 
-    glm::mat4 proj = glm::ortho(-2.0f, 2.0f, -1.5f, 1.5f, -1.0f, 1.0f);
+    glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100, 0, 0));
+    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200, 200, 0));
+
+    glm::mat4 mvp = proj * view * model;
 
     Shader *shader = new Shader("../res/shaders/BasicVertex.shader", "../res/shaders/BasicFragment.shader");
     shader->Bind();
     shader->SetUniform4f("u_Color", 1.0f, 0.3f, 0.8f, 1.0f);
-    shader->SetUniformMat4f("u_MVP", proj);
+    shader->SetUniformMat4f("u_MVP", mvp);
 
     Texture* texture = new Texture("../res/textures/dog.png");
     texture->Bind();
